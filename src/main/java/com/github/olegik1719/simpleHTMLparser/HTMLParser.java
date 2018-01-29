@@ -1,8 +1,12 @@
-package com.github.olegik1719.smallHTTPparser;
+package main.java.com.github.olegik1719.simpleHTMLparser;
+
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,27 +24,37 @@ import org.jsoup.select.Elements;
  *
  * @author Javin Paul
  */
-public class HTMLParser{
+public class HTMLParser {
 
     public static void main(String args[]) throws Exception {
-        String HTMLSTring = new String(Files.readAllBytes(Paths.get("C:\\Users\\Off\\Desktop\\test\\1.htm")),StandardCharsets.UTF_8);
+        Properties properties = new Properties() {
+            public Properties load(String path) {
+                try (InputStream resourceAsStream =
+                             getClass().getResourceAsStream(path)) {
+                    load(resourceAsStream);
+                } catch (IOException ignored) {
+                    ignored.printStackTrace();
+                }
+                return this;
+            }
+        }.load("resourses/properties.ini");
+        String HTMLSTring = new String(Files.readAllBytes(Paths.get(properties.getProperty("html"))), StandardCharsets.UTF_8);
         Pattern p = Pattern.compile("/spb/firm/\\d*");
         Matcher m = p.matcher(HTMLSTring);
-        //FileWriter fileWriter = new FileWriter("C:/Share/!Spam/Инстр3.csv");
-        try (FileWriter fileWriter = new FileWriter("C:/Share/!Spam/Аптекарский9.csv")){
-            while(m.find()) {
-                String clAddr="https://2gis.ru"+HTMLSTring.substring(m.start(), m.end());
-                Document client=Jsoup.connect(clAddr).get();//parse(getHTML(clAddr));
+        try (FileWriter fileWriter = new FileWriter(properties.getProperty("csv"))) {
+            while (m.find()) {
+                String clAddr = "https://2gis.ru" + HTMLSTring.substring(m.start(), m.end());
+                Document client = Jsoup.connect(clAddr).get();//parse(getHTML(clAddr));
                 //System.out.printf("%s%n",getContacts(client));
-                fileWriter.append(String.format("%s%n",getContacts(client)));
+                fileWriter.append(String.format("%s%n", getContacts(client)));
             }
         }
 
 
     }
 
-    public static String getContacts(Document htmlFile){
-        String title = htmlFile.body().getElementsByTag("h1").text() +";";;
+    public static String getContacts(Document htmlFile) {
+        String title = htmlFile.body().getElementsByTag("h1").text() + ";";
         Element div = null;
         Elements div2 = null;
         try {
@@ -48,21 +62,16 @@ public class HTMLParser{
             //title = title + div.text();
             //title = title + div.getElementsByTag("bdo").text()+"\n";
             div2 = div.select("div.contact__phonesVisible");
-            for (Element element:div2){
+            for (Element element : div2) {
                 title = title + element.getElementsByTag("bdo").text() + ";";
             }
             //title = title + div.text();
-        }catch (Exception e){
+        } catch (Exception e) {
             //System.out.printf("%s%n",title);
             //System.out.printf("%s%n", "Exception!");
             title += "Не удалось просканировать номера";
         }
-
         return title;
-
-//        System.out.println("Jsoup can also parse HTML file directly");
-//        System.out.println("title : " + title);
-//        System.out.println("class of div tag : " + cssClass);
     }
 }
 
