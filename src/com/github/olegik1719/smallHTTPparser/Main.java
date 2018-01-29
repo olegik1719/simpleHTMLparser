@@ -1,4 +1,4 @@
-package olegik1719;
+package com.github.olegik1719.smallHTTPparser;
 
 public class Main {
 

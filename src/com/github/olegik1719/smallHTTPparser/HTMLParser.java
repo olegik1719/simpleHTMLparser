@@ -1,4 +1,4 @@
-package olegik1719;
+package com.github.olegik1719.smallHTTPparser;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
