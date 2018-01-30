@@ -1,4 +1,4 @@
-package main.java.com.github.olegik1719.simpleHTMLparser;
+package com.github.olegik1719.simpleHTMLparser;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class HTMLParser {
         Matcher m = p.matcher(HTMLSTring);
         try (FileWriter fileWriter = new FileWriter(properties.getProperty("csv"))) {
             while (m.find()) {
-                String clAddr = "https://2gis.ru" + HTMLSTring.substring(m.start(), m.end());
+                String clAddr = "" + HTMLSTring.substring(m.start(), m.end());
                 Document client = Jsoup.connect(clAddr).get();//parse(getHTML(clAddr));
                 //System.out.printf("%s%n",getContacts(client));
                 fileWriter.append(String.format("%s%n", getContacts(client)));

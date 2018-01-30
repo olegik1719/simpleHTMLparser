@@ -21,11 +21,40 @@
             <version>1.16.20</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.klieber/phantomjs -->
+        <!-- <dependency>
+            <groupId>com.github.klieber</groupId>
+            <artifactId>phantomjs</artifactId>
+            <version>2.5.0-beta</version>
+        </dependency> -->
+
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.codeborne/phantomjsdriver -->
+        <dependency>
+            <groupId>com.github.detro</groupId>
+            <artifactId>phantomjsdriver</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.igor-suhorukov/phantomjs-runner -->
+        <dependency>
+            <groupId>com.github.igor-suhorukov</groupId>
+            <artifactId>phantomjs-runner</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+
     </dependencies>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
     </properties>
 
 </project>

@@ -1,23 +1,26 @@
-package main.java.com.github.olegik1719.simpleHTMLparser;
+package com.github.olegik1719.simpleHTMLparser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        Properties properties = new Properties();
-        InputStream is = new FileInputStream("src/main/resourses/properties.ini");
+        //Properties properties = new Properties();
+        try(BufferedReader bufferedReader
+                    = new BufferedReader(new FileReader("src/main/resourses/MKD.lst"))){
+            String s = bufferedReader.readLine();
+            while (s != null){
+                System.out.printf("%s%n!!!%n",s);
+                s = bufferedReader.readLine();
+            }
+        }
+
         //File file = new File();
         //System.out.printf("%s%n", file.getAbsolutePath());
-        properties.load(is);
-        for (Object key: properties.keySet()) {
-            System.out.printf("%s:%s%n",key, properties.get(key));
-        }
+        //properties.load(is);
+
 
     }
 }
