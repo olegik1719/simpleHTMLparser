@@ -1,14 +1,9 @@
 package com.github.olegik1719.simpleHTMLparser;
 
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-
 import java.io.*;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.Properties;
 
 public class InternetProviders {
@@ -19,9 +14,7 @@ public class InternetProviders {
         Properties properties = new Properties();
         try {
             properties.load(new BufferedReader(new FileReader(folder_resourses+"properties.ini")));
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e){
             e.printStackTrace();
         }
         url = properties.getProperty("url");
@@ -33,18 +26,19 @@ public class InternetProviders {
         //String url =
         String mkd = folder_resourses + "MKD.lst";
         String urls = folder_resourses+"url.lst";
+        String just_url = folder_resourses+"url_just.lst";
         String error = "Точных совпадений нет";
         String error_log = folder_resourses+"errors.lst";
 
         try (FileWriter fileWriter = new FileWriter(urls);
              FileWriter errorWriter = new FileWriter(error_log);
+             FileWriter urlWriter = new FileWriter(just_url);
             BufferedReader bufferedReader
                     = new BufferedReader(new FileReader(mkd))) {
             String s = bufferedReader.readLine();
             int i=0;
             while (s != null) {
                 System.out.printf("%s%n",i++);
-                String sml_url = getSearchUrl(s);
                 Document doc = getDoc(getSearchUrl(s));
                 if (doc.text().contains(error)) {
                     doc = getDoc(getSearchUrl(removeLiter(s)));
@@ -56,11 +50,14 @@ public class InternetProviders {
                 if (! doc.text().contains(error)){
                     String elem = doc.getElementsByTag("h3").first().getElementsByTag("a").first().attr("href");
                     int askPos = elem.indexOf('?');
-                    int slushPos = elem.lastIndexOf('/');
+                    int slushPos = elem.lastIndexOf('/') + 1;
                     String id = askPos > 0 ? elem.substring(slushPos,askPos):elem.substring(slushPos);
-                    fileWriter.write(String.format("%s%n%n", url + "/spb/service/"
-                            + id
-                            + "/group/internet"));
+                    String writeOut = String.format("%s%n%n", url + "/spb/geo/"
+                            + id + "/service/" + id
+                            + "/group/internet");
+                    fileWriter.write(writeOut);
+                    urlWriter.write(writeOut);
+
 //                    System.out.printf("%s%n", url + "spb/service/"
 //                            + doc.getElementsByTag("h3").first().getElementsByTag("a").first().attr("href").substring(9)
 //                            + "/group/internet");
@@ -75,17 +72,19 @@ public class InternetProviders {
                 }
                 fileWriter.flush();
                 errorWriter.flush();
+                urlWriter.flush();
+                if (i % 10 == 0) Thread.sleep(1000*10);
                 s = bufferedReader.readLine();
             }
         }
     }
 
-    public static Document getDoc(String URLsite) throws IOException, InterruptedException {
-        Thread.sleep(1000);
+    private static Document getDoc(String URLsite) throws IOException, InterruptedException {
+        Thread.sleep(1000*4);
         return Jsoup.connect(URLsite)
                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                 .referrer("http://www.google.com")
-                .timeout(1000*5) //it's in milliseconds, so this means 5 seconds.
+                .timeout(1000*8) //it's in milliseconds, so this means 5 seconds.
                 .ignoreHttpErrors(true)
                 .get();
     }
